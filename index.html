@@ -873,13 +873,13 @@
         function applyResponsiveFov() {
             const aspect = window.innerWidth / window.innerHeight;
             camera.aspect = aspect;
-            const baseHorizontalFovDeg = 75;
+            const baseHorizontalFovDeg = 62;
             if (aspect < 1) {
                 const horizRad = THREE.MathUtils.degToRad(baseHorizontalFovDeg);
                 const vertRad = 2 * Math.atan(Math.tan(horizRad / 2) / aspect);
-                camera.fov = Math.min(100, THREE.MathUtils.radToDeg(vertRad));
+                camera.fov = Math.min(80, THREE.MathUtils.radToDeg(vertRad));
             } else {
-                camera.fov = 60;
+                camera.fov = 52;
             }
             camera.updateProjectionMatrix();
         }
@@ -2415,14 +2415,14 @@
             const carPos = carGroup.position;
             let targetPos, targetLook;
             if (state.camMode === 'chase') {
-                targetPos = new THREE.Vector3(carPos.x, 3.6, carPos.z + 7.5);
-                targetLook = new THREE.Vector3(carPos.x, 1.1, carPos.z - 6);
+                targetPos = new THREE.Vector3(carPos.x, 2.9, carPos.z + 5.2);
+                targetLook = new THREE.Vector3(carPos.x, 1.0, carPos.z - 4);
             } else if (state.camMode === 'topdown') {
-                targetPos = new THREE.Vector3(carPos.x, 16, carPos.z + 3);
-                targetLook = new THREE.Vector3(carPos.x, 0, carPos.z - 4);
+                targetPos = new THREE.Vector3(carPos.x, 10.5, carPos.z + 2);
+                targetLook = new THREE.Vector3(carPos.x, 0, carPos.z - 3);
             } else if (state.camMode === 'side') {
-                targetPos = new THREE.Vector3(carPos.x + 6.5, 1.9, carPos.z + 0.8);
-                targetLook = new THREE.Vector3(carPos.x, 0.7, carPos.z);
+                targetPos = new THREE.Vector3(carPos.x + 5.5, 2.0, carPos.z + 0.5);
+                targetLook = new THREE.Vector3(carPos.x, 0.9, carPos.z);
             } else { // hood
                 targetPos = new THREE.Vector3(carPos.x, 1.25, carPos.z + 0.4);
                 targetLook = new THREE.Vector3(carPos.x, 1.0, carPos.z - 12);
