@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Vasu's Wagon R Rush</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <style>
         * {
             margin: 0;
@@ -18,7 +19,7 @@
             height: 100%;
             overflow: hidden;
             background: #0a0e17;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overscroll-behavior: none;
             position: fixed;
             touch-action: none;
@@ -28,16 +29,14 @@
 
         canvas {
             touch-action: none;
+            display: block;
         }
 
         #app {
             position: relative;
             width: 100vw;
             height: 100vh;
-        }
-
-        canvas {
-            display: block;
+            overflow: hidden;
         }
 
         #hud {
@@ -45,7 +44,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px 14px;
             padding-top: max(10px, env(safe-area-inset-top));
             display: flex;
             justify-content: space-between;
@@ -55,66 +54,74 @@
         }
 
         .hud-card {
-            background: rgba(10, 14, 23, 0.55);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
-            padding: 6px 12px;
+            background: rgba(10, 14, 23, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 7px 14px;
             color: #fff;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         #score-card {
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         #score-card .big {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             color: #ffd23f;
+            line-height: 1.2;
         }
 
         #speed-card {
             text-align: right;
-            font-size: 11px;
+            font-size: 10px;
+            font-weight: 600;
         }
 
         #speed-card .big {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 19px;
+            font-weight: 800;
             color: #4fd1c5;
+            line-height: 1.2;
         }
 
         #cam-label {
             position: absolute;
-            top: 10px;
+            top: max(12px, env(safe-area-inset-top));
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(10, 14, 23, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 4px 10px;
+            background: rgba(10, 14, 23, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
             border-radius: 20px;
             color: #fff;
-            font-size: 10px;
+            font-size: 11px;
+            font-weight: 700;
             letter-spacing: 1px;
             pointer-events: none;
             z-index: 5;
             text-transform: uppercase;
+            backdrop-filter: blur(6px);
         }
 
         #controls-hint {
             position: absolute;
             bottom: 14px;
             left: 14px;
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 10px;
-            background: rgba(10, 14, 23, 0.45);
-            padding: 6px 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 10.5px;
+            background: rgba(10, 14, 23, 0.55);
+            padding: 6px 12px;
             border-radius: 10px;
             z-index: 5;
             line-height: 1.5;
             pointer-events: none;
+            backdrop-filter: blur(6px);
         }
 
         .overlay {
@@ -123,17 +130,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             text-align: center;
-            background: radial-gradient(circle at 50% 30%, rgba(30, 40, 60, 0.92), rgba(4, 6, 10, 0.97));
+            background: radial-gradient(circle at 50% 35%, rgba(20, 30, 48, 0.93), rgba(6, 9, 16, 0.97));
             z-index: 20;
             color: #fff;
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            padding: 20px 10px;
+            padding: 20px 16px;
             padding-top: max(20px, env(safe-area-inset-top));
             padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+
+        .overlay-content {
+            width: 100%;
+            max-width: 500px;
+            margin: auto 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         .hidden {
@@ -141,14 +158,15 @@
         }
 
         .avatar-ring {
-            width: 80px;
-            height: 80px;
+            width: 74px;
+            height: 74px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #ffd23f;
-            box-shadow: 0 0 20px rgba(255, 210, 63, 0.5);
-            margin-bottom: 10px;
+            box-shadow: 0 0 24px rgba(255, 210, 63, 0.6), 0 4px 14px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2px;
             flex-shrink: 0;
+            transition: transform 0.2s ease;
         }
 
         .avatar-ring img {
@@ -158,212 +176,223 @@
         }
 
         h1.title {
-            font-size: clamp(22px, 5vw, 34px);
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            font-size: clamp(22px, 5.2vw, 32px);
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            margin-bottom: 2px;
             background: linear-gradient(90deg, #ffd23f, #ff6b6b);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            line-height: 1.2;
+            text-shadow: 0 2px 20px rgba(255, 210, 63, 0.2);
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: clamp(11px, 2.5vw, 14px);
-            margin-bottom: 14px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: clamp(12px, 2.7vw, 14px);
+            margin-bottom: 4px;
+            font-weight: 500;
         }
 
-        .panel-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 520px;
+        .home-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            padding: 12px 16px;
             width: 100%;
-            padding: 0 4px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
         }
 
         .choice-group {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
         }
 
         .choice-group label.grouplabel {
-            font-size: 10px;
-            letter-spacing: 1.5px;
+            font-size: 11px;
+            letter-spacing: 1.6px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 1px;
+            color: #ffd23f;
+            font-weight: 800;
         }
 
         .choice-btns {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
         }
 
         .choice-btn {
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 7px 14px;
+            border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: clamp(10px, 2.5vw, 12.5px);
+            font-size: clamp(11.5px, 2.7vw, 13px);
+            font-weight: 600;
             cursor: pointer;
-            transition: all .15s ease;
+            transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .choice-btn:hover {
-            background: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
         }
 
         .choice-btn.active {
-            background: #ffd23f;
+            background: linear-gradient(135deg, #ffd23f, #ff9f43);
             color: #111;
             border-color: #ffd23f;
-            font-weight: 700;
+            font-weight: 800;
+            box-shadow: 0 4px 16px rgba(255, 210, 63, 0.45);
+            transform: scale(1.03);
         }
 
         .start-btn {
-            margin-top: 6px;
-            padding: 12px 32px;
-            font-size: clamp(14px, 3.5vw, 17px);
-            font-weight: 800;
-            letter-spacing: 1px;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            padding: 13px 40px;
+            font-size: clamp(14.5px, 3.8vw, 17.5px);
+            font-weight: 900;
+            letter-spacing: 1.2px;
             border-radius: 50px;
             border: none;
             cursor: pointer;
             color: #111;
-            background: linear-gradient(90deg, #ffd23f, #ffb347);
-            box-shadow: 0 6px 22px rgba(255, 180, 60, 0.4);
+            background: linear-gradient(90deg, #ffd23f, #ff9f43);
+            box-shadow: 0 6px 26px rgba(255, 170, 50, 0.45);
             text-transform: uppercase;
-            transition: transform .15s ease;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            animation: pulse-start 2.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-start {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 6px 24px rgba(255, 170, 50, 0.45);
+            }
+
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 8px 32px rgba(255, 170, 50, 0.7);
+            }
         }
 
         .start-btn:hover {
-            transform: translateY(-2px) scale(1.03);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 30px rgba(255, 180, 60, 0.6);
         }
 
-        #touch-controls {
+        .start-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ===== ONLY TWO MOBILE STEER BUTTONS (LEFT & RIGHT) ===== */
+        #mobile-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             display: none;
             justify-content: space-between;
-            padding: 0 14px;
-            padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 40px));
-            z-index: 6;
+            padding: 0 24px;
+            padding-bottom: max(22px, calc(env(safe-area-inset-bottom) + 16px));
+            z-index: 10;
             pointer-events: none;
         }
 
-        #touch-controls.active {
+        #mobile-controls.active {
             display: flex;
         }
 
-        .touch-side {
-            display: flex;
-            gap: 12px;
-            pointer-events: auto;
-        }
-
-        .touch-btn {
-            width: 60px;
-            height: 60px;
+        .mobile-steer-btn {
+            width: 82px;
+            height: 82px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.07);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 24px;
+            background: rgba(12, 18, 30, 0.72);
+            border: 2.5px solid rgba(255, 210, 63, 0.5);
+            color: #ffd23f;
             display: flex;
             align-items: center;
             justify-content: center;
-            -webkit-user-select: none;
-            user-select: none;
-            backdrop-filter: blur(4px);
-            opacity: 0.6;
-        }
-
-        .touch-btn:active {
-            background: rgba(255, 210, 63, 0.35);
-            opacity: 0.85;
-        }
-
-        #mobile-steer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            display: none;
-            justify-content: space-between;
-            padding: 0 16px;
-            padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 40px));
-            z-index: 7;
-            pointer-events: none;
-        }
-
-        #mobile-steer.active {
-            display: flex;
-        }
-
-        .steer-btn {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.07);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-user-select: none;
-            user-select: none;
-            backdrop-filter: blur(4px);
             pointer-events: auto;
             touch-action: none;
-            opacity: 0.6;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 16px rgba(255, 210, 63, 0.15);
+            cursor: pointer;
+            transition: transform 0.08s ease, background 0.08s ease, border-color 0.08s ease, box-shadow 0.08s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 32px;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        .steer-btn:active {
-            background: rgba(255, 210, 63, 0.35);
-            opacity: 0.85;
+        .mobile-steer-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 210, 63, 0.4);
+            border-color: #ffd23f;
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(255, 210, 63, 0.65), inset 0 0 22px rgba(255, 210, 63, 0.4);
         }
 
         #cam-toggle-btn {
             position: absolute;
             top: max(10px, env(safe-area-inset-top));
-            right: 10px;
+            right: 12px;
             z-index: 8;
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(10, 14, 23, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(10, 14, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
-            font-size: 16px;
+            font-size: 17px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             backdrop-filter: blur(6px);
             pointer-events: auto;
-            opacity: 0.6;
+            opacity: 0.75;
+            transition: all 0.15s ease;
         }
 
-        .hidden-btn {
-            display: none !important;
+        #cam-toggle-btn:hover,
+        #cam-toggle-btn:active {
+            opacity: 1;
+            transform: scale(1.06);
+            border-color: #ffd23f;
         }
 
         #gameover .stat-row,
         #win-screen .stat-row {
             display: flex;
             gap: 20px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 12px 24px;
+            border-radius: 14px;
         }
 
         #gameover .stat,
@@ -384,9 +413,10 @@
         #win-screen .stat .lbl {
             font-size: 10px;
             letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.55);
             text-transform: uppercase;
             margin-top: 2px;
+            font-weight: 600;
         }
 
         #crash-flash {
@@ -407,93 +437,83 @@
             justify-content: center;
             background: #0a0e17;
             color: #fff;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 700;
             z-index: 30;
             letter-spacing: 1px;
         }
 
-        /* ===== MOBILE-SPECIFIC RESPONSIVE STYLES ===== */
+        /* ===== MOBILE-SPECIFIC RESPONSIVE TUNING ===== */
         @media (max-width: 600px) {
             .overlay {
-                padding: 15px 8px;
-                padding-top: max(15px, env(safe-area-inset-top));
-                justify-content: flex-start;
+                padding: 14px 10px;
+                padding-top: max(14px, env(safe-area-inset-top));
+                padding-bottom: max(14px, env(safe-area-inset-bottom));
+                gap: 7px;
             }
 
             .avatar-ring {
-                width: 60px;
-                height: 60px;
-                border-width: 2px;
-                margin-bottom: 8px;
+                width: 62px;
+                height: 62px;
+                border-width: 2.5px;
+                margin-bottom: 2px;
             }
 
             h1.title {
-                font-size: clamp(18px, 5.5vw, 28px);
-                margin-bottom: 3px;
+                font-size: clamp(18px, 5vw, 24px);
+                margin-bottom: 1px;
             }
 
             .subtitle {
                 font-size: 11px;
-                margin-bottom: 10px;
+                margin-bottom: 2px;
             }
 
-            .panel-row {
-                gap: 8px;
-                margin-bottom: 10px;
-                padding: 0 2px;
-            }
-
-            .choice-group {
-                gap: 4px;
-                width: 100%;
-            }
-
-            .choice-group label.grouplabel {
-                font-size: 9px;
-            }
-
-            .choice-btns {
-                gap: 4px;
+            .home-card {
+                padding: 7px 10px;
+                gap: 5px;
             }
 
             .choice-btn {
-                padding: 5px 8px;
-                font-size: 10px;
-                border-radius: 6px;
+                padding: 5px 10px;
+                font-size: 11px;
             }
 
             .start-btn {
-                padding: 10px 28px;
-                font-size: 14px;
-                margin-top: 5px;
+                padding: 11px 32px;
+                font-size: 15px;
+                margin-top: 3px;
             }
 
             #hud {
-                padding: 6px 8px;
+                padding: 6px 10px;
                 padding-top: max(6px, env(safe-area-inset-top));
             }
 
             .hud-card {
-                padding: 4px 8px;
-                border-radius: 8px;
+                padding: 5px 10px;
+                border-radius: 10px;
             }
 
             #score-card {
-                font-size: 10px;
+                font-size: 9.5px;
             }
+
             #score-card .big {
                 font-size: 16px;
             }
+
             #speed-card {
                 font-size: 9px;
             }
+
             #speed-card .big {
-                font-size: 14px;
+                font-size: 15px;
             }
 
             #cam-label {
-                font-size: 8px;
-                padding: 3px 8px;
+                font-size: 9px;
+                padding: 4px 10px;
                 top: max(6px, env(safe-area-inset-top));
             }
 
@@ -501,156 +521,77 @@
                 display: none !important;
             }
 
-            .touch-btn {
-                width: 52px;
-                height: 52px;
-                font-size: 20px;
-            }
-
-            .steer-btn {
-                width: 62px;
-                height: 62px;
-                font-size: 26px;
+            .mobile-steer-btn {
+                width: 74px;
+                height: 74px;
+                font-size: 28px;
             }
 
             #cam-toggle-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
             }
 
             #mute-btn {
                 font-size: 14px !important;
-                padding: 6px 8px !important;
-            }
-
-            #music-file-label {
-                font-size: 10px !important;
-                padding: 5px 8px !important;
+                padding: 6px 10px !important;
             }
 
             #gameover .stat-row,
             #win-screen .stat-row {
-                gap: 16px;
-                margin-bottom: 12px;
+                gap: 14px;
+                padding: 8px 16px;
+                margin-bottom: 10px;
             }
         }
 
-        @media (max-height: 600px) {
+        @media (max-height: 640px) {
             .overlay {
-                padding-top: 8px;
-                justify-content: flex-start;
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+            }
+
+            .overlay-content {
+                gap: 6px;
             }
 
             .avatar-ring {
-                width: 50px;
-                height: 50px;
-                margin-bottom: 5px;
-            }
-
-            h1.title {
-                font-size: 18px;
-                margin-bottom: 2px;
-            }
-
-            .subtitle {
-                font-size: 10px;
-                margin-bottom: 6px;
-            }
-
-            .panel-row {
-                margin-bottom: 6px;
-                gap: 5px;
-            }
-
-            .choice-btn {
-                padding: 4px 7px;
-                font-size: 9px;
-            }
-
-            .start-btn {
-                padding: 8px 24px;
-                font-size: 13px;
-                margin-top: 3px;
-            }
-
-            .choice-group {
-                gap: 3px;
-            }
-
-            .choice-group label.grouplabel {
-                font-size: 8px;
+                width: 52px;
+                height: 52px;
                 margin-bottom: 0;
             }
 
-            #touch-controls, #mobile-steer {
-                padding-bottom: max(25px, calc(env(safe-area-inset-bottom) + 25px));
-            }
-
-            .touch-btn {
-                width: 46px;
-                height: 46px;
-                font-size: 18px;
-            }
-
-            .steer-btn {
-                width: 54px;
-                height: 54px;
-                font-size: 22px;
-            }
-        }
-
-        /* Landscape orientation on small screens */
-        @media (max-height: 450px) and (orientation: landscape) {
-            .overlay {
-                flex-direction: column;
-                padding: 5px 10px;
-            }
-
-            .avatar-ring {
-                width: 40px;
-                height: 40px;
-                margin-bottom: 4px;
-            }
-
             h1.title {
-                font-size: 16px;
+                font-size: 18px;
+                margin-bottom: 0;
             }
 
             .subtitle {
-                font-size: 9px;
-                margin-bottom: 4px;
+                font-size: 10.5px;
+                margin-bottom: 1px;
             }
 
-            .panel-row {
-                margin-bottom: 4px;
+            .home-card {
+                padding: 6px 10px;
                 gap: 4px;
             }
 
             .choice-btn {
-                padding: 3px 6px;
-                font-size: 8px;
+                padding: 5px 9px;
+                font-size: 10.5px;
             }
 
             .start-btn {
-                padding: 6px 20px;
-                font-size: 11px;
+                padding: 10px 28px;
+                font-size: 14px;
+                margin-top: 2px;
             }
 
-            #touch-controls, #mobile-steer {
-                padding-bottom: max(15px, calc(env(safe-area-inset-bottom) + 15px));
-            }
-
-            .touch-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-
-            .steer-btn {
-                width: 46px;
-                height: 46px;
-                font-size: 18px;
+            .mobile-steer-btn {
+                width: 66px;
+                height: 66px;
+                font-size: 24px;
             }
         }
     </style>
@@ -665,7 +606,7 @@
             <div id="score-card" class="hud-card">
                 <div>DISTANCE</div>
                 <div class="big"><span id="distance-val">0</span> m</div>
-                <div style="margin-top:4px;">COINS: <span id="coins-val">0</span></div>
+                <div style="margin-top:2px;">COINS: <span id="coins-val">0</span></div>
             </div>
             <div style="display:flex; align-items:flex-start; gap:8px;">
                 <div id="speed-card" class="hud-card">
@@ -673,141 +614,134 @@
                     <div>km/h</div>
                 </div>
                 <button id="mute-btn" class="hud-card"
-                    style="pointer-events:auto; cursor:pointer; border:none; font-size:18px; padding:10px 12px;">🔊</button>
+                    style="pointer-events:auto; cursor:pointer; border:none; font-size:18px; padding:8px 12px;">🔊</button>
             </div>
         </div>
         <div id="cam-label" class="hidden">Chase Cam</div>
-        <div id="controls-hint" class="hidden">Arrow/WASD: Steer &nbsp;|&nbsp; C: Camera &nbsp;|&nbsp; P: Pause</div>
+        <div id="controls-hint" class="hidden">Arrow/WASD or Touch ◀ ▶: Steer | C: Camera | P: Pause</div>
         <div id="cam-toggle-btn" class="hidden">📷</div>
 
-        <div id="touch-controls">
-            <div class="touch-side">
-                <div class="touch-btn" id="touch-left">&#8592;</div>
-                <div class="touch-btn" id="touch-right">&#8594;</div>
-            </div>
-            <div class="touch-side">
-                <div class="touch-btn" id="touch-brake">&#9660;</div>
-                <div class="touch-btn" id="touch-gas">&#9650;</div>
-            </div>
-        </div>
-
-        <div id="mobile-steer">
-            <div class="steer-btn" id="steer-left">&#8592;</div>
-            <div class="steer-btn" id="steer-right">&#8594;</div>
+        <!-- ONLY 2 ERGONOMIC MOBILE STEER BUTTONS -->
+        <div id="mobile-controls">
+            <button class="mobile-steer-btn" id="btn-steer-left" aria-label="Steer Left">
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="mobile-steer-btn" id="btn-steer-right" aria-label="Steer Right">
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
         </div>
 
         <div id="crash-flash"></div>
 
         <div id="start-screen" class="overlay">
-            <div class="avatar-ring"><img id="start-avatar" src="" alt="Vasu"></div>
-            <h1 class="title">VASU'S WAGON R RUSH</h1>
-            <div class="subtitle">Dodge traffic, weave past pedestrians, collect coins!</div>
+            <div class="overlay-content">
+                <div class="avatar-ring"><img id="start-avatar" src="" alt="Vasu"></div>
+                <h1 class="title">VASU'S WAGON R RUSH</h1>
+                <div class="subtitle">Dodge traffic, weave past pedestrians & collect coins!</div>
 
-            <div class="choice-group" style="margin-bottom:10px;">
-                <label class="grouplabel">Choose Your Car</label>
-                <div class="choice-btns" id="car-choices">
-                    <div class="choice-btn active" data-car="wagonr">WagonR</div>
-                    <div class="choice-btn" data-car="thar">Thar 4x4</div>
-                    <div class="choice-btn" data-car="gwagon">G-Wagon</div>
-                    <div class="choice-btn" data-car="rangerover">Range Rover</div>
-                    <div class="choice-btn" data-car="concept">Cyber Concept</div>
-                </div>
-            </div>
-
-            <div class="panel-row">
-                <div class="choice-group">
-                    <label class="grouplabel">Controls</label>
-                    <div class="choice-btns" id="control-choices">
-                        <div class="choice-btn active" data-control="arrows">Arrow Keys</div>
-                        <div class="choice-btn" data-control="wasd">WASD</div>
-                        <div class="choice-btn" data-control="mouse">Mouse</div>
-                        <div class="choice-btn" data-control="touch">Touch</div>
+                <div class="home-card">
+                    <div class="choice-group">
+                        <label class="grouplabel">Choose Your Car</label>
+                        <div class="choice-btns" id="car-choices">
+                            <div class="choice-btn active" data-car="wagonr">WagonR</div>
+                            <div class="choice-btn" data-car="thar">Thar 4x4</div>
+                            <div class="choice-btn" data-car="gwagon">G-Wagon</div>
+                            <div class="choice-btn" data-car="rangerover">Range Rover</div>
+                            <div class="choice-btn" data-car="concept">Cyber Concept</div>
+                        </div>
                     </div>
                 </div>
-                <div class="choice-group">
-                    <label class="grouplabel">Camera</label>
-                    <div class="choice-btns" id="cam-choices">
-                        <div class="choice-btn active" data-cam="chase">Chase</div>
-                        <div class="choice-btn" data-cam="topdown">Top-Down</div>
-                        <div class="choice-btn" data-cam="hood">Hood</div>
-                        <div class="choice-btn" data-cam="side">Side</div>
+
+                <div class="home-card">
+                    <div class="choice-group">
+                        <label class="grouplabel">Difficulty</label>
+                        <div class="choice-btns" id="diff-choices">
+                            <div class="choice-btn" data-diff="easy">Easy</div>
+                            <div class="choice-btn active" data-diff="medium">Medium</div>
+                            <div class="choice-btn" data-diff="hard">Hard</div>
+                        </div>
                     </div>
                 </div>
-                <div class="choice-group">
-                    <label class="grouplabel">Difficulty</label>
-                    <div class="choice-btns" id="diff-choices">
-                        <div class="choice-btn" data-diff="easy">Easy</div>
-                        <div class="choice-btn active" data-diff="medium">Medium</div>
-                        <div class="choice-btn" data-diff="hard">Hard</div>
-                    </div>
+
+                <div style="margin-top:2px;">
+                    <input type="file" id="music-file" accept="audio/*" style="display:none">
+                    <label for="music-file" id="music-file-label" class="choice-btn"
+                        style="cursor:pointer; display:inline-block; font-size:11px;">🎵 Jaan Se Guzarte Hain (tap to
+                        change)</label>
                 </div>
-            </div>
 
-            <div style="margin-bottom:12px;">
-                <input type="file" id="music-file" accept="audio/*" style="display:none">
-                <label for="music-file" id="music-file-label" class="choice-btn"
-                    style="cursor:pointer; display:inline-block;">🎵 Jaan Se Guzarte Hain (tap to change)</label>
+                <button class="start-btn" id="start-btn">START GAME 🏁</button>
             </div>
-
-            <button class="start-btn" id="start-btn">Press Space / Tap to Start</button>
         </div>
 
         <div id="gameover" class="overlay hidden">
-            <div class="avatar-ring"><img id="over-avatar" src="" alt="Vasu"></div>
-            <h1 class="title"
-                style="background:linear-gradient(90deg,#ff6b6b,#ffd23f); -webkit-background-clip:text; background-clip:text;">
-                GAME OVER</h1>
-            <div class="stat-row">
-                <div class="stat">
-                    <div class="val" id="final-distance">0</div>
-                    <div class="lbl">Meters</div>
+            <div class="overlay-content">
+                <div class="avatar-ring"><img id="over-avatar" src="" alt="Vasu"></div>
+                <h1 class="title"
+                    style="background:linear-gradient(90deg,#ff6b6b,#ffd23f); -webkit-background-clip:text; background-clip:text;">
+                    GAME OVER</h1>
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="val" id="final-distance">0</div>
+                        <div class="lbl">Meters</div>
+                    </div>
+                    <div class="stat">
+                        <div class="val" id="final-coins">0</div>
+                        <div class="lbl">Coins</div>
+                    </div>
+                    <div class="stat">
+                        <div class="val" id="final-speed">0</div>
+                        <div class="lbl">Top km/h</div>
+                    </div>
                 </div>
-                <div class="stat">
-                    <div class="val" id="final-coins">0</div>
-                    <div class="lbl">Coins</div>
+                <div style="display:flex; gap:14px;">
+                    <button class="start-btn" id="restart-btn" style="animation:none;">Restart</button>
+                    <button class="start-btn" id="home-btn"
+                        style="background:linear-gradient(90deg,#8aa0b8,#5f7690); box-shadow:0 6px 22px rgba(90,110,130,0.35); animation:none;">Home</button>
                 </div>
-                <div class="stat">
-                    <div class="val" id="final-speed">0</div>
-                    <div class="lbl">Top km/h</div>
-                </div>
-            </div>
-            <div style="display:flex; gap:14px;">
-                <button class="start-btn" id="restart-btn">Restart</button>
-                <button class="start-btn" id="home-btn"
-                    style="background:linear-gradient(90deg,#8aa0b8,#5f7690); box-shadow:0 6px 22px rgba(90,110,130,0.35);">Home</button>
             </div>
         </div>
 
         <div id="pause-screen" class="overlay hidden">
-            <h1 class="title">PAUSED</h1>
-            <button class="start-btn" id="resume-btn">Resume</button>
+            <div class="overlay-content">
+                <h1 class="title">PAUSED</h1>
+                <button class="start-btn" id="resume-btn" style="animation:none;">Resume</button>
+            </div>
         </div>
 
         <div id="win-screen" class="overlay hidden">
-            <div class="avatar-ring" style="border-color:#4fd1c5; box-shadow:0 0 30px rgba(79,209,197,0.6);"><img
-                    id="win-avatar" src="" alt="Vasu"></div>
-            <h1 class="title"
-                style="background:linear-gradient(90deg,#4fd1c5,#ffd23f); -webkit-background-clip:text; background-clip:text;">
-                YOU WIN! 🏁</h1>
-            <div class="subtitle">RACE COMPLETE</div>
-            <div class="stat-row">
-                <div class="stat">
-                    <div class="val" id="win-distance">3500</div>
-                    <div class="lbl">Meters</div>
+            <div class="overlay-content">
+                <div class="avatar-ring" style="border-color:#4fd1c5; box-shadow:0 0 30px rgba(79,209,197,0.6);"><img
+                        id="win-avatar" src="" alt="Vasu"></div>
+                <h1 class="title"
+                    style="background:linear-gradient(90deg,#4fd1c5,#ffd23f); -webkit-background-clip:text; background-clip:text;">
+                    YOU WIN! 🏁</h1>
+                <div class="subtitle">RACE COMPLETE</div>
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="val" id="win-distance">3500</div>
+                        <div class="lbl">Meters</div>
+                    </div>
+                    <div class="stat">
+                        <div class="val" id="win-coins">0</div>
+                        <div class="lbl">Coins</div>
+                    </div>
+                    <div class="stat">
+                        <div class="val" id="win-speed">0</div>
+                        <div class="lbl">Top km/h</div>
+                    </div>
                 </div>
-                <div class="stat">
-                    <div class="val" id="win-coins">0</div>
-                    <div class="lbl">Coins</div>
+                <div style="display:flex; gap:14px;">
+                    <button class="start-btn" id="win-restart-btn" style="animation:none;">Restart</button>
+                    <button class="start-btn" id="win-home-btn"
+                        style="background:linear-gradient(90deg,#8aa0b8,#5f7690); box-shadow:0 6px 22px rgba(90,110,130,0.35); animation:none;">Home</button>
                 </div>
-                <div class="stat">
-                    <div class="val" id="win-speed">0</div>
-                    <div class="lbl">Top km/h</div>
-                </div>
-            </div>
-            <div style="display:flex; gap:14px;">
-                <button class="start-btn" id="win-restart-btn">Restart</button>
-                <button class="start-btn" id="win-home-btn"
-                    style="background:linear-gradient(90deg,#8aa0b8,#5f7690); box-shadow:0 6px 22px rgba(90,110,130,0.35);">Home</button>
             </div>
         </div>
     </div>
@@ -830,7 +764,7 @@
 
         // ---------- Tunable config ----------
         const CONFIG = {
-            laneWidth: 4.3,
+            laneWidth: 3.3,
             laneCount: 3,
             roadLength: 260,          // how far ahead world is generated
             recycleDistance: 22,      // behind camera distance before recycle
@@ -842,26 +776,26 @@
             buildingSpawnStep: 14,
             treeSpawnStep: 9,
             lampSpawnStep: 20,
-            trafficSpawnStep: 30,
-            pedSpawnStep: 16,
+            trafficSpawnStep: 65,     // wide distance spacing between traffic cars
+            pedSpawnStep: 22,
             curveAmp: 6.5,
             curveFreq: 0.0065,
             finishDistance: 3500,
         };
 
-        // External car models from models/ directory (targetLen 3.5 sets ALL cars to exact same size as WagonR)
+        // External car models from models/ directory (scaled to arcade proportions)
         const CARS = {
-            wagonr: { name: 'WagonR', path: 'models/2013_suzuki_wagonr-car.glb', targetLen: 3.5, rotY: 0, yOffset: 0 },
-            thar: { name: 'Thar 4x4', path: 'models/thar_4x4.glb', targetLen: 3.5, rotY: Math.PI, yOffset: 0 },
-            gwagon: { name: 'G-Wagon', path: 'models/mercedes_benz_g-class_w263.glb', targetLen: 3.5, rotY: Math.PI, yOffset: 0 },
-            rangerover: { name: 'Range Rover', path: 'models/land_rover_range_rover_sport_-_2023.glb', targetLen: 3.5, rotY: Math.PI, yOffset: 0 },
-            concept: { name: 'Cyber Concept', path: 'models/future_is_our_legacy.glb', targetLen: 3.5, rotY: Math.PI, yOffset: 0 },
+            wagonr: { name: 'WagonR', path: 'models/2013_suzuki_wagonr-car.glb', targetLen: 3.1, maxWidth: 1.42, rotY: 0, yOffset: 0 },
+            thar: { name: 'Thar 4x4', path: 'models/thar_4x4.glb', targetLen: 3.0, maxWidth: 1.45, rotY: Math.PI, yOffset: 0 },
+            gwagon: { name: 'G-Wagon', path: 'models/mercedes_benz_g-class_w263.glb', targetLen: 3.1, maxWidth: 1.45, rotY: Math.PI, yOffset: 0 },
+            rangerover: { name: 'Range Rover', path: 'models/land_rover_range_rover_sport_-_2023.glb', targetLen: 3.15, maxWidth: 1.48, rotY: Math.PI, yOffset: 0 },
+            concept: { name: 'Cyber Concept', path: 'models/future_is_our_legacy.glb', targetLen: 3.65, maxWidth: 1.62, rotX: 0, rotY: 0, rotZ: Math.PI, yOffset: 0 },
         };
 
         const DIFFICULTY = {
-            easy: { baseSpeed: 15, maxSpeed: 34, speedRampPerSec: 0.05, trafficCount: 5, pedCount: 5 },
-            medium: { baseSpeed: 21, maxSpeed: 48, speedRampPerSec: 0.09, trafficCount: 8, pedCount: 7 },
-            hard: { baseSpeed: 28, maxSpeed: 68, speedRampPerSec: 0.15, trafficCount: 12, pedCount: 9 },
+            easy: { baseSpeed: 15, maxSpeed: 34, speedRampPerSec: 0.05, trafficCount: 3, pedCount: 3 },
+            medium: { baseSpeed: 21, maxSpeed: 48, speedRampPerSec: 0.09, trafficCount: 4, pedCount: 4 },
+            hard: { baseSpeed: 28, maxSpeed: 68, speedRampPerSec: 0.15, trafficCount: 6, pedCount: 5 },
         };
 
         let scene, camera, renderer, clock;
@@ -1183,116 +1117,118 @@
             const darkMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.7 });
             const chromeMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.95, roughness: 0.15 });
 
-            // lower body
-            const lower = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.55, 3.7), bodyMat);
-            lower.position.y = 0.5;
+            // lower body (well-proportioned 1.38m width x 3.1m length)
+            const lower = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.44, 3.1), bodyMat);
+            lower.position.y = 0.42;
             lower.castShadow = true;
             carGroup.add(lower);
 
-            // black lower cladding molding (Wagon R signature two-tone)
-            const cladding = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.14, 3.75), claddingMat);
-            cladding.position.y = 0.24;
+            // cladding
+            const cladding = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.12, 3.14), claddingMat);
+            cladding.position.y = 0.21;
             carGroup.add(cladding);
 
-            // tall boxy cabin (Wagon R signature tall roofline)
-            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.85, 2.5), bodyMat);
-            cabin.position.set(0, 1.15, -0.15);
+            // tall boxy cabin
+            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.26, 0.68, 2.1), bodyMat);
+            cabin.position.set(0, 0.94, -0.12);
             cabin.castShadow = true;
             carGroup.add(cabin);
 
             // door line grooves
             for (const sx of [-1, 1]) {
-                const line1 = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.5, 0.02), darkMat);
-                line1.position.set(sx * 0.86, 0.55, 0.4);
+                const line1 = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.42, 0.02), darkMat);
+                line1.position.set(sx * 0.70, 0.46, 0.35);
                 carGroup.add(line1);
             }
 
             // windshield + windows band
-            const windBand = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.5, 2.65), glassMat);
-            windBand.position.set(0, 1.15, -0.15);
+            const windBand = new THREE.Mesh(new THREE.BoxGeometry(1.30, 0.40, 2.22), glassMat);
+            windBand.position.set(0, 0.95, -0.12);
             carGroup.add(windBand);
 
-            // black window frame pillars
-            for (const zx of [-1.05, -0.15, 0.85]) {
-                const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.58, 0.06, 0.06), claddingMat);
-                pillar.position.set(0, 0.92, zx);
+            // window frame pillars
+            for (const zx of [-0.90, -0.12, 0.75]) {
+                const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.05, 0.05), claddingMat);
+                pillar.position.set(0, 0.78, zx);
                 carGroup.add(pillar);
             }
 
             // roof cap
-            const roof = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.12, 2.3), bodyMat);
-            roof.position.set(0, 1.62, -0.15);
+            const roof = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.10, 1.95), bodyMat);
+            roof.position.set(0, 1.32, -0.12);
             roof.castShadow = true;
             carGroup.add(roof);
 
             // hood slope (short bonnet)
-            const hood = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.42, 0.9), bodyMat);
-            hood.position.set(0, 0.62, 1.75);
+            const hood = new THREE.Mesh(new THREE.BoxGeometry(1.30, 0.34, 0.76), bodyMat);
+            hood.position.set(0, 0.52, 1.46);
             carGroup.add(hood);
 
             // front bumper
-            const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.32, 0.28), claddingMat);
-            frontBumper.position.set(0, 0.34, 2.12);
+            const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.40, 0.26, 0.22), claddingMat);
+            frontBumper.position.set(0, 0.28, 1.76);
             frontBumper.castShadow = true;
             carGroup.add(frontBumper);
+
             // grille
-            const grille = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.18, 0.05), darkMat);
-            grille.position.set(0, 0.42, 2.24);
+            const grille = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.14, 0.04), darkMat);
+            grille.position.set(0, 0.35, 1.86);
             carGroup.add(grille);
 
             // rear bumper
-            const rearBumper = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.32, 0.26), claddingMat);
-            rearBumper.position.set(0, 0.34, -1.98);
+            const rearBumper = new THREE.Mesh(new THREE.BoxGeometry(1.40, 0.26, 0.22), claddingMat);
+            rearBumper.position.set(0, 0.28, -1.65);
             rearBumper.castShadow = true;
             carGroup.add(rearBumper);
 
-            // wheel arches (all 4 corners)
-            const archPositions = [[-0.86, 0.42, 1.25], [0.86, 0.42, 1.25], [-0.86, 0.42, -1.25], [0.86, 0.42, -1.25]];
+            // wheel arches
+            const archPositions = [[-0.70, 0.35, 1.05], [0.70, 0.35, 1.05], [-0.70, 0.35, -1.05], [0.70, 0.35, -1.05]];
             for (const p of archPositions) {
-                const arch = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.4, 0.62), claddingMat);
+                const arch = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.34, 0.52), claddingMat);
                 arch.position.set(p[0], p[1], p[2]);
                 carGroup.add(arch);
             }
 
             // headlights
-            const headGeo = new THREE.BoxGeometry(0.32, 0.2, 0.1);
+            const headGeo = new THREE.BoxGeometry(0.26, 0.16, 0.08);
             const headMat = new THREE.MeshStandardMaterial({ color: 0xfff9d6, emissive: 0xffefa0, emissiveIntensity: 0.7 });
             for (const sx of [-1, 1]) {
                 const hl = new THREE.Mesh(headGeo, headMat);
-                hl.position.set(sx * 0.62, 0.55, 2.18);
+                hl.position.set(sx * 0.50, 0.46, 1.82);
                 carGroup.add(hl);
             }
             // tail lights
             const tailMat = new THREE.MeshStandardMaterial({ color: 0xaa1111, emissive: 0xff2222, emissiveIntensity: 0.55 });
             for (const sx of [-1, 1]) {
-                const tl = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.08), tailMat);
-                tl.position.set(sx * 0.65, 0.62, -1.87);
+                const tl = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.06), tailMat);
+                tl.position.set(sx * 0.52, 0.52, -1.56);
                 carGroup.add(tl);
             }
 
             // side mirrors
             for (const sx of [-1, 1]) {
-                const mirrorArm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.14), darkMat);
-                mirrorArm.position.set(sx * 0.78, 1.12, 0.9);
+                const mirrorArm = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.12), darkMat);
+                mirrorArm.position.set(sx * 0.64, 0.92, 0.75);
                 carGroup.add(mirrorArm);
-                const mirror = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.13, 0.22), bodyMat);
-                mirror.position.set(sx * 0.9, 1.1, 0.9);
+                const mirror = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.11, 0.18), bodyMat);
+                mirror.position.set(sx * 0.74, 0.90, 0.75);
                 carGroup.add(mirror);
             }
 
             // door handles
             for (const sx of [-1, 1]) {
-                const handle = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.04, 0.22), chromeMat);
-                handle.position.set(sx * 0.86, 0.85, 0.35);
+                const handle = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.035, 0.18), chromeMat);
+                handle.position.set(sx * 0.70, 0.70, 0.28);
                 carGroup.add(handle);
             }
 
-            // wheels with spoked rims
-            const wheelGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.26, 20);
+            // wheels touching road y = 0
+            const wheelR = 0.28;
+            const wheelGeo = new THREE.CylinderGeometry(wheelR, wheelR, 0.20, 20);
             const wheelMat = new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.85 });
             const wheelPositions = [
-                [-0.85, 0.34, 1.25], [0.85, 0.34, 1.25],
-                [-0.85, 0.34, -1.25], [0.85, 0.34, -1.25]
+                [-0.69, wheelR, 1.05], [0.69, wheelR, 1.05],
+                [-0.69, wheelR, -1.05], [0.69, wheelR, -1.05]
             ];
             carGroup.userData.wheels = [];
             for (const p of wheelPositions) {
@@ -1301,15 +1237,15 @@
                 tire.rotation.z = Math.PI / 2;
                 tire.castShadow = true;
                 w.add(tire);
-                const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.29, 12), chromeMat);
+                const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.22, 12), chromeMat);
                 hub.rotation.z = Math.PI / 2;
                 w.add(hub);
                 for (let s = 0; s < 5; s++) {
-                    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.29, 0.045, 0.03), chromeMat);
+                    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.038, 0.025), chromeMat);
                     spoke.rotation.x = (Math.PI * 2 / 5) * s;
                     w.add(spoke);
                 }
-                const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 10), darkMat);
+                const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.24, 10), darkMat);
                 cap.rotation.z = Math.PI / 2;
                 w.add(cap);
                 w.position.set(p[0], p[1], p[2]);
@@ -1326,12 +1262,22 @@
             carGroup.position.set(0, 0, 0);
             scene.add(carGroup);
 
-            // contact shadow blob
-            const shadowGeo = new THREE.CircleGeometry(2.1, 24);
-            const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.28 });
+            // Realistic tire contact shadow on road
+            const shadowGeo = new THREE.PlaneGeometry(1.4, 2.9);
+            const shadowCvs = document.createElement('canvas');
+            shadowCvs.width = 64; shadowCvs.height = 128;
+            const sctx = shadowCvs.getContext('2d');
+            const sgrad = sctx.createRadialGradient(32, 64, 10, 32, 64, 38);
+            sgrad.addColorStop(0, 'rgba(0, 0, 0, 0.7)');
+            sgrad.addColorStop(0.7, 'rgba(0, 0, 0, 0.3)');
+            sgrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            sctx.fillStyle = sgrad;
+            sctx.fillRect(0, 0, 64, 128);
+            const shadowTex = new THREE.CanvasTexture(shadowCvs);
+            const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.65, depthWrite: false });
             carShadow = new THREE.Mesh(shadowGeo, shadowMat);
             carShadow.rotation.x = -Math.PI / 2;
-            carShadow.position.y = 0.02;
+            carShadow.position.y = 0.015;
             carGroup.add(carShadow);
 
             carGroup.userData.bbox = new THREE.Box3();
@@ -1352,36 +1298,80 @@
                 if (carGroup.userData.glbGroup) { carGroup.remove(carGroup.userData.glbGroup); }
                 const model = gltf.scene;
 
-                // Scale based on target length so all cars fit road lanes cleanly
-                const box = new THREE.Box3();
-                model.traverse(o => { if (o.isMesh) box.expandByObject(o); });
+                // For the cyber concept model, keep ONLY the complete self-contained car node (chassis_carpaint02_LOD2_45)
+                // and remove all other duplicate/exploded Blender scene nodes
+                if (carKey === 'concept') {
+                    let carpaintNode = null;
+                    model.traverse(o => {
+                        if (o.name && o.name.includes('chassis_carpaint02')) {
+                            carpaintNode = o;
+                        }
+                    });
+                    if (carpaintNode && carpaintNode.parent) {
+                        const sceneRoot = carpaintNode.parent;
+                        const siblings = [...sceneRoot.children];
+                        for (const child of siblings) {
+                            if (child !== carpaintNode) {
+                                sceneRoot.remove(child);
+                            }
+                        }
+                    }
+                } else {
+                    // Studio turntable disc removal for other models
+                    const toRemove = [];
+                    model.traverse(o => {
+                        const name = o.name || '';
+                        if (name.includes('Circle.005') || name.includes('143') || name.toLowerCase().includes('floor')) {
+                            toRemove.push(o);
+                        }
+                    });
+                    toRemove.forEach(o => { if (o.parent) o.parent.remove(o); });
+                }
+
+                // Orient model so wheels touch road and forward direction is -Z
+                model.rotation.set(
+                    cfg.rotX !== undefined ? cfg.rotX : 0,
+                    cfg.rotY !== undefined ? cfg.rotY : 0,
+                    cfg.rotZ !== undefined ? cfg.rotZ : 0
+                );
+                model.updateMatrixWorld(true);
+
+                // Compute accurate bounding box of single car
+                const box = new THREE.Box3().setFromObject(model);
                 const size = new THREE.Vector3();
                 box.getSize(size);
-                
-                const rawLength = Math.max(size.x, size.z);
-                let finalScale = cfg.scale || 1.0;
-                if (cfg.targetLen && rawLength > 0) {
-                    finalScale = cfg.targetLen / rawLength;
+                const center = new THREE.Vector3();
+                box.getCenter(center);
+
+                // Scale to arcade proportions with individual car maxWidth
+                const targetLen = cfg.targetLen || 3.1;
+                const maxW = cfg.maxWidth || 1.62;
+                let finalScale = targetLen / (size.z > 0 ? size.z : 1);
+                if (size.x * finalScale > maxW) {
+                    finalScale = maxW / size.x;
                 }
-                model.scale.setScalar(finalScale);
 
-                // Rotation and ground level positioning (y=0 keeps wheels on road surface!)
-                model.rotation.y = cfg.rotY !== undefined ? cfg.rotY : 0;
-                model.position.set(0, cfg.yOffset || 0, 0);
+                // Pivot wrapper: Center in X/Z, lowest point precisely at y = 0
+                const pivot = new THREE.Group();
+                model.position.set(-center.x, -box.min.y + (cfg.yOffset || 0), -center.z);
+                pivot.add(model);
+                pivot.scale.setScalar(finalScale);
 
-                model.traverse(o => { 
-                    if (o.isMesh) { 
-                        o.castShadow = true; 
-                        o.receiveShadow = true; 
-                    } 
+                model.traverse(o => {
+                    if (o.isMesh && o.visible) {
+                        o.castShadow = true;
+                        o.receiveShadow = true;
+                    }
                 });
-                
-                carGroup.add(model);
-                carGroup.userData.glbGroup = model;
 
+                carGroup.add(pivot);
+                carGroup.userData.glbGroup = pivot;
+
+                const roofY = size.y * finalScale;
                 if (avatarSprite && avatarPin) {
-                    avatarPin.position.set(0, 2.13, 0.2);
-                    avatarSprite.position.set(0, 2.65, 0.2);
+                    avatarPin.position.set(0, roofY + 0.35, 0.15);
+                    avatarSprite.position.set(0, roofY + 0.85, 0.15);
+                    avatarSprite.userData.baseY = roofY + 0.85;
                 }
 
                 if (carGroup.userData.proceduralGroup) carGroup.userData.proceduralGroup.visible = false;
@@ -1426,15 +1416,16 @@
             const circleTex = new THREE.CanvasTexture(cvs);
             const spriteMat = new THREE.SpriteMaterial({ map: circleTex, transparent: true });
             avatarSprite = new THREE.Sprite(spriteMat);
-            avatarSprite.scale.set(1.15, 1.15, 1.15);
-            avatarSprite.position.set(0, 2.65, 0.2);
+            avatarSprite.scale.set(1.0, 1.0, 1.0);
+            avatarSprite.position.set(0, 2.15, 0.2);
+            avatarSprite.userData = { baseY: 2.15 };
             carGroup.add(avatarSprite);
 
             // pin line connecting to roof
-            const pinGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.7, 6);
+            const pinGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.6, 6);
             const pinMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
             avatarPin = new THREE.Mesh(pinGeo, pinMat);
-            avatarPin.position.set(0, 2.13, 0.2);
+            avatarPin.position.set(0, 1.72, 0.2);
             carGroup.add(avatarPin);
         }
 
@@ -1662,14 +1653,14 @@
         }
         function respawnTrafficAll() {
             const activeCount = Math.min(trafficPool.length, DIFFICULTY[state.difficulty].trafficCount);
-            let z = -80;
+            let z = -90;
             let lastLane = -1;
             for (let i = 0; i < trafficPool.length; i++) {
                 const v = trafficPool[i];
                 if (i < activeCount) {
                     activateVehicle(v, z, lastLane);
                     lastLane = v.userData.lane;
-                    z -= CONFIG.trafficSpawnStep + Math.random() * 16;
+                    z -= (CONFIG.trafficSpawnStep + Math.random() * 30);
                 } else {
                     v.visible = false;
                     v.userData.active = false;
@@ -1677,7 +1668,7 @@
             }
         }
         function activateVehicle(v, zOverride, avoidLane) {
-            const oncoming = Math.random() < 0.18;
+            const oncoming = Math.random() < 0.12;
             let lane = Math.floor(Math.random() * CONFIG.laneCount);
             if (avoidLane !== undefined && CONFIG.laneCount > 1) {
                 let tries = 0;
@@ -1685,7 +1676,20 @@
             }
             v.userData.lane = lane;
             v.userData.baseX = lanesX[lane];
-            v.position.z = zOverride !== undefined ? zOverride : -(160 + Math.random() * 160);
+
+            if (zOverride !== undefined) {
+                v.position.z = zOverride;
+            } else {
+                // Find furthest active vehicle ahead to guarantee wide gap
+                let minZ = -140;
+                for (const other of trafficPool) {
+                    if (other.userData.active && other !== v && other.position.z < minZ) {
+                        minZ = other.position.z;
+                    }
+                }
+                v.position.z = minZ - (CONFIG.trafficSpawnStep + Math.random() * 35);
+            }
+
             v.position.x = v.userData.baseX + curveX(v.position.z);
             v.userData.oncoming = oncoming;
             v.rotation.y = oncoming ? Math.PI : 0;
@@ -1700,7 +1704,7 @@
                 v.position.z += (state.speed * delta) + (dir * (v.userData.oncoming ? (state.speed * 0.4 * v.userData.speedMul) : (state.speed * (v.userData.speedMul - 1))) * delta);
                 v.position.x = v.userData.baseX + curveX(v.position.z);
 
-                if (v.position.z > 25 || v.position.z < -360) {
+                if (v.position.z > 25 || v.position.z < -420) {
                     activateVehicle(v);
                 }
 
@@ -1923,36 +1927,89 @@
         }
 
         function setupTouch() {
-            const map = { 'touch-left': 'left', 'touch-right': 'right', 'touch-gas': 'gas', 'touch-brake': 'brake', 'steer-left': 'left', 'steer-right': 'right' };
-            for (const id in map) {
-                const el = document.getElementById(id);
-                const k = map[id];
-                ['touchstart', 'mousedown'].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); touchActive[k] = true; }));
-                ['touchend', 'mouseup', 'touchcancel', 'mouseleave'].forEach(ev => el.addEventListener(ev, e => { touchActive[k] = false; }));
+            const leftBtn = document.getElementById('btn-steer-left');
+            const rightBtn = document.getElementById('btn-steer-right');
+
+            if (leftBtn) {
+                ['touchstart', 'mousedown'].forEach(ev => leftBtn.addEventListener(ev, e => {
+                    e.preventDefault();
+                    touchActive.left = true;
+                    if (state.running && !state.paused && !state.crashed) {
+                        state.lane = Math.max(0, state.lane - 1);
+                    }
+                }, { passive: false }));
+                ['touchend', 'mouseup', 'touchcancel', 'mouseleave'].forEach(ev => leftBtn.addEventListener(ev, e => {
+                    e.preventDefault();
+                    touchActive.left = false;
+                }, { passive: false }));
             }
+
+            if (rightBtn) {
+                ['touchstart', 'mousedown'].forEach(ev => rightBtn.addEventListener(ev, e => {
+                    e.preventDefault();
+                    touchActive.right = true;
+                    if (state.running && !state.paused && !state.crashed) {
+                        state.lane = Math.min(CONFIG.laneCount - 1, state.lane + 1);
+                    }
+                }, { passive: false }));
+                ['touchend', 'mouseup', 'touchcancel', 'mouseleave'].forEach(ev => rightBtn.addEventListener(ev, e => {
+                    e.preventDefault();
+                    touchActive.right = false;
+                }, { passive: false }));
+            }
+
+            // Screen swipe gestures for natural mobile lane switching
+            let touchStartX = 0, touchStartY = 0;
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length > 0) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                if (!state.running || state.paused || state.crashed) return;
+                if (e.changedTouches && e.changedTouches.length > 0) {
+                    const dx = e.changedTouches[0].clientX - touchStartX;
+                    const dy = e.changedTouches[0].clientY - touchStartY;
+                    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+                        if (dx < 0) {
+                            state.lane = Math.max(0, state.lane - 1);
+                        } else {
+                            state.lane = Math.min(CONFIG.laneCount - 1, state.lane + 1);
+                        }
+                    }
+                }
+            }, { passive: true });
+
             document.getElementById('cam-toggle-btn').addEventListener('click', () => { if (state.running) cycleCamera(); });
-            const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-            if (isTouch) {
-                document.getElementById('mobile-steer').classList.add('active');
+
+            const isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || window.innerWidth <= 768;
+            const mobileControls = document.getElementById('mobile-controls');
+            if (mobileControls && isMobile) {
+                mobileControls.classList.add('active');
             }
         }
 
         let mouseSteer = { active: false, x: 0.5 };
         function readInput() {
             let left = false, right = false, gas = false, brake = false;
-            if (state.controlMode === 'arrows') {
-                left = keys['ArrowLeft']; right = keys['ArrowRight'];
-                gas = keys['ArrowUp']; brake = keys['ArrowDown'];
+            if (state.controlMode === 'arrows' || !state.controlMode) {
+                left = keys['ArrowLeft'] || keys['KeyA'];
+                right = keys['ArrowRight'] || keys['KeyD'];
+                gas = keys['ArrowUp'] || keys['KeyW'];
+                brake = keys['ArrowDown'] || keys['KeyS'];
             } else if (state.controlMode === 'wasd') {
-                left = keys['KeyA']; right = keys['KeyD'];
-                gas = keys['KeyW']; brake = keys['KeyS'];
+                left = keys['KeyA'] || keys['ArrowLeft'];
+                right = keys['KeyD'] || keys['ArrowRight'];
+                gas = keys['KeyW'] || keys['ArrowUp'];
+                brake = keys['KeyS'] || keys['ArrowDown'];
             } else if (state.controlMode === 'mouse') {
                 if (mouseSteer.active) {
                     if (mouseSteer.x < 0.42) left = true;
                     else if (mouseSteer.x > 0.58) right = true;
                 }
             }
-            // touch always available as supplemental
             left = left || touchActive.left;
             right = right || touchActive.right;
             gas = gas || touchActive.gas;
@@ -1974,22 +2031,6 @@
 
         // ---------------- UI ----------------
         function setupUI() {
-            document.querySelectorAll('#control-choices .choice-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#control-choices .choice-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.controlMode = btn.dataset.control;
-                    document.getElementById('touch-controls').classList.toggle('active', state.controlMode === 'touch');
-                });
-            });
-            document.querySelectorAll('#cam-choices .choice-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#cam-choices .choice-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.camMode = btn.dataset.cam;
-                    updateCamLabel();
-                });
-            });
             document.querySelectorAll('#diff-choices .choice-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('#diff-choices .choice-btn').forEach(b => b.classList.remove('active'));
@@ -2013,10 +2054,6 @@
             document.getElementById('mute-btn').addEventListener('click', toggleMute);
             setupMouseSteer();
             setupCustomMusicPicker();
-
-            if ('ontouchstart' in window) {
-                document.querySelectorAll('[data-control="touch"]').forEach(b => b.click());
-            }
         }
 
         function updateCamLabel() {
@@ -2181,6 +2218,13 @@
                 document.getElementById('cam-label').classList.remove('hidden');
                 document.getElementById('controls-hint').classList.remove('hidden');
                 document.getElementById('cam-toggle-btn').classList.remove('hidden');
+
+                const isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || window.innerWidth <= 768;
+                const mobileControls = document.getElementById('mobile-controls');
+                if (mobileControls && isMobile) {
+                    mobileControls.classList.add('active');
+                }
+
                 updateCamLabel();
                 const d = DIFFICULTY[state.difficulty];
                 CONFIG.baseSpeed = d.baseSpeed;
@@ -2217,10 +2261,17 @@
             if (coinPool.length) respawnCoinAll();
             document.getElementById('gameover').classList.add('hidden');
             document.getElementById('win-screen').classList.add('hidden');
+
+            const isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || window.innerWidth <= 768;
+            const mobileControls = document.getElementById('mobile-controls');
+            if (mobileControls && isMobile) {
+                mobileControls.classList.add('active');
+            }
         }
 
         function restartGame() {
             document.getElementById('gameover').classList.add('hidden');
+            document.getElementById('win-screen').classList.add('hidden');
             resetRunState();
             state.running = true;
             startMusic();
@@ -2245,6 +2296,8 @@
             document.getElementById('win-coins').textContent = state.coins;
             document.getElementById('win-speed').textContent = Math.floor(state.topSpeed * 3.6);
             document.getElementById('win-screen').classList.remove('hidden');
+            const mobileControls = document.getElementById('mobile-controls');
+            if (mobileControls) mobileControls.classList.remove('active');
         }
 
         function triggerCrash() {
@@ -2258,6 +2311,9 @@
             setTimeout(() => { flash.style.opacity = '0'; }, 90);
             for (let i = 0; i < 3; i++) spawnSmoke(carGroup.position.clone().add(new THREE.Vector3((Math.random() - 0.5), 1, (Math.random() - 0.5))));
             spawnBurst(carGroup.position.clone().add(new THREE.Vector3(0, 1, 0)), 0xff5533);
+
+            const mobileControls = document.getElementById('mobile-controls');
+            if (mobileControls) mobileControls.classList.remove('active');
 
             setTimeout(() => {
                 document.getElementById('final-distance').textContent = Math.floor(state.distance);
@@ -2277,6 +2333,8 @@
             document.getElementById('cam-label').classList.add('hidden');
             document.getElementById('controls-hint').classList.add('hidden');
             document.getElementById('cam-toggle-btn').classList.add('hidden');
+            const mobileControls = document.getElementById('mobile-controls');
+            if (mobileControls) mobileControls.classList.remove('active');
             document.getElementById('start-screen').classList.remove('hidden');
             stopMusic();
         }
@@ -2308,7 +2366,8 @@
 
                 // avatar bob
                 if (avatarSprite) {
-                    avatarSprite.position.y = 2.65 + Math.sin(state.elapsed * 3) * 0.07;
+                    const baseY = avatarSprite.userData.baseY || 2.15;
+                    avatarSprite.position.y = baseY + Math.sin(state.elapsed * 3) * 0.05;
                 }
 
                 recycleEnvironment(delta);
@@ -2342,17 +2401,18 @@
             const carPos = carGroup.position;
             let targetPos, targetLook;
             if (state.camMode === 'chase') {
-                targetPos = new THREE.Vector3(carPos.x * 0.5, 3.6, carPos.z + 7.5);
-                targetLook = new THREE.Vector3(carPos.x, 1.1, carPos.z - 6);
+                // Lower eye-level arcade chase cam that firmly grounds car to road and gives clear forward visibility
+                targetPos = new THREE.Vector3(carPos.x * 0.45, 2.15, carPos.z + 5.8);
+                targetLook = new THREE.Vector3(carPos.x, 0.75, carPos.z - 14);
             } else if (state.camMode === 'topdown') {
-                targetPos = new THREE.Vector3(carPos.x * 0.3, 16, carPos.z + 3);
+                targetPos = new THREE.Vector3(carPos.x * 0.3, 14, carPos.z + 2.5);
                 targetLook = new THREE.Vector3(carPos.x * 0.3, 0, carPos.z - 4);
             } else if (state.camMode === 'side') {
-                targetPos = new THREE.Vector3(carPos.x + 8, 2.4, carPos.z + 1);
-                targetLook = new THREE.Vector3(carPos.x, 0.9, carPos.z);
+                targetPos = new THREE.Vector3(carPos.x + 6.5, 1.9, carPos.z + 0.8);
+                targetLook = new THREE.Vector3(carPos.x, 0.7, carPos.z);
             } else { // hood
-                targetPos = new THREE.Vector3(carPos.x, 1.55, carPos.z + 0.6);
-                targetLook = new THREE.Vector3(carPos.x, 1.2, carPos.z - 10);
+                targetPos = new THREE.Vector3(carPos.x, 1.25, carPos.z + 0.4);
+                targetLook = new THREE.Vector3(carPos.x, 1.0, carPos.z - 12);
             }
             camera.position.lerp(targetPos, Math.min(1, delta * 6));
             const curLook = camera.userData.look || targetLook.clone();
