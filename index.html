@@ -158,13 +158,14 @@
         }
 
         .avatar-ring {
-            width: 74px;
-            height: 74px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid #ffd23f;
-            box-shadow: 0 0 24px rgba(255, 210, 63, 0.6), 0 4px 14px rgba(0, 0, 0, 0.5);
-            margin-bottom: 2px;
+            border: 4px solid #ffd23f;
+            box-shadow: 0 0 30px rgba(255, 210, 63, 0.5);
+            margin-top: 14px;
+            margin-bottom: 18px;
             flex-shrink: 0;
             transition: transform 0.2s ease;
         }
@@ -324,35 +325,35 @@
         }
 
         .mobile-steer-btn {
-            width: 82px;
-            height: 82px;
+            width: 114px;
+            height: 114px;
             border-radius: 50%;
-            background: rgba(12, 18, 30, 0.72);
-            border: 2.5px solid rgba(255, 210, 63, 0.5);
+            background: rgba(18, 26, 42, 0.40);
+            border: 2.5px solid rgba(255, 210, 63, 0.7);
             color: #ffd23f;
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: auto;
             touch-action: none;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 16px rgba(255, 210, 63, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(255, 210, 63, 0.18);
             cursor: pointer;
             transition: transform 0.08s ease, background 0.08s ease, border-color 0.08s ease, box-shadow 0.08s ease;
             outline: none;
             -webkit-tap-highlight-color: transparent;
-            font-size: 32px;
+            font-size: 42px;
             user-select: none;
             -webkit-user-select: none;
         }
 
         .mobile-steer-btn:active {
-            transform: scale(0.92);
-            background: rgba(255, 210, 63, 0.4);
+            transform: scale(0.93);
+            background: rgba(255, 210, 63, 0.45);
             border-color: #ffd23f;
             color: #fff;
-            box-shadow: 0 4px 18px rgba(255, 210, 63, 0.65), inset 0 0 22px rgba(255, 210, 63, 0.4);
+            box-shadow: 0 4px 22px rgba(255, 210, 63, 0.75), inset 0 0 24px rgba(255, 210, 63, 0.45);
         }
 
         #cam-toggle-btn {
@@ -522,9 +523,9 @@
             }
 
             .mobile-steer-btn {
-                width: 74px;
-                height: 74px;
-                font-size: 28px;
+                width: 104px;
+                height: 104px;
+                font-size: 38px;
             }
 
             #cam-toggle-btn {
@@ -589,9 +590,9 @@
             }
 
             .mobile-steer-btn {
-                width: 66px;
-                height: 66px;
-                font-size: 24px;
+                width: 90px;
+                height: 90px;
+                font-size: 32px;
             }
         }
     </style>
@@ -624,13 +625,13 @@
         <!-- ONLY 2 ERGONOMIC MOBILE STEER BUTTONS -->
         <div id="mobile-controls">
             <button class="mobile-steer-btn" id="btn-steer-left" aria-label="Steer Left">
-                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.8"
+                <svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="3"
                     stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </button>
             <button class="mobile-steer-btn" id="btn-steer-right" aria-label="Steer Right">
-                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.8"
+                <svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="3"
                     stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -776,7 +777,7 @@
             buildingSpawnStep: 14,
             treeSpawnStep: 9,
             lampSpawnStep: 20,
-            trafficSpawnStep: 65,     // wide distance spacing between traffic cars
+            trafficSpawnStep: 95,     // wide comfortable spacing between traffic cars
             pedSpawnStep: 22,
             curveAmp: 6.5,
             curveFreq: 0.0065,
@@ -793,9 +794,9 @@
         };
 
         const DIFFICULTY = {
-            easy: { baseSpeed: 15, maxSpeed: 34, speedRampPerSec: 0.05, trafficCount: 3, pedCount: 3 },
-            medium: { baseSpeed: 21, maxSpeed: 48, speedRampPerSec: 0.09, trafficCount: 4, pedCount: 4 },
-            hard: { baseSpeed: 28, maxSpeed: 68, speedRampPerSec: 0.15, trafficCount: 6, pedCount: 5 },
+            easy: { baseSpeed: 15, maxSpeed: 34, speedRampPerSec: 0.05, trafficCount: 2, pedCount: 3 },
+            medium: { baseSpeed: 21, maxSpeed: 48, speedRampPerSec: 0.09, trafficCount: 3, pedCount: 4 },
+            hard: { baseSpeed: 28, maxSpeed: 68, speedRampPerSec: 0.15, trafficCount: 4, pedCount: 5 },
         };
 
         let scene, camera, renderer, clock;
@@ -803,6 +804,11 @@
         let avatarSprite, avatarPin;
         let roadMeshes = [];
         let leftBuildings = [], rightBuildings = [];
+        let distantBuildingsL = [], distantBuildingsR = [];
+        let billboardsL = [], billboardsR = [];
+        let busStopsL = [], busStopsR = [];
+        let shopFrontsL = [], shopFrontsR = [];
+        let clouds = [];
         let treesL = [], treesR = [];
         let lampsL = [], lampsR = [];
         let trafficPool = [];
@@ -849,6 +855,7 @@
             clock = new THREE.Clock();
 
             setupSky();
+            setupClouds();
             setupLights();
             setupGround();
             setupMountains();
@@ -923,6 +930,51 @@
             sunSprite.scale.set(60, 60, 1);
             sunSprite.position.set(-90, 60, -140);
             scene.add(sunSprite);
+        }
+
+        // ---------------- CLOUDS ----------------
+        function makeCloudTexture() {
+            const cvs = document.createElement('canvas');
+            cvs.width = 256; cvs.height = 128;
+            const ctx = cvs.getContext('2d');
+            ctx.clearRect(0, 0, 256, 128);
+            function blob(cx, cy, r, a) {
+                const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+                g.addColorStop(0, `rgba(255, 255, 255, ${a})`);
+                g.addColorStop(0.7, `rgba(255, 255, 255, ${a * 0.55})`);
+                g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            blob(75, 75, 52, 0.82);
+            blob(128, 58, 62, 0.92);
+            blob(180, 72, 48, 0.82);
+            blob(115, 82, 44, 0.78);
+            return new THREE.CanvasTexture(cvs);
+        }
+
+        function setupClouds() {
+            const tex = makeCloudTexture();
+            const cloudMat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.68, depthWrite: false, fog: true });
+            for (let i = 0; i < 12; i++) {
+                const sprite = new THREE.Sprite(cloudMat);
+                const w = 24 + Math.random() * 22;
+                sprite.scale.set(w, w * 0.5, 1);
+                sprite.position.set(
+                    (Math.random() - 0.5) * 240,
+                    45 + Math.random() * 28,
+                    -40 - Math.random() * 220
+                );
+                sprite.userData = {
+                    driftSpeed: 1.2 + Math.random() * 2.0,
+                    minX: -140,
+                    maxX: 140
+                };
+                scene.add(sprite);
+                clouds.push(sprite);
+            }
         }
 
         function setupMountains() {
@@ -1383,9 +1435,9 @@
 
                 const roofY = size.y * finalScale;
                 if (avatarSprite && avatarPin) {
-                    avatarPin.position.set(0, roofY + 0.35, 0.15);
-                    avatarSprite.position.set(0, roofY + 0.85, 0.15);
-                    avatarSprite.userData.baseY = roofY + 0.85;
+                    avatarPin.position.set(0, roofY + 0.65, 0.15);
+                    avatarSprite.position.set(0, roofY + 1.30, 0.15);
+                    avatarSprite.userData.baseY = roofY + 1.30;
                 }
 
                 if (carGroup.userData.proceduralGroup) carGroup.userData.proceduralGroup.visible = false;
@@ -1430,29 +1482,29 @@
             const circleTex = new THREE.CanvasTexture(cvs);
             const spriteMat = new THREE.SpriteMaterial({ map: circleTex, transparent: true });
             avatarSprite = new THREE.Sprite(spriteMat);
-            avatarSprite.scale.set(0.92, 0.92, 0.92);
-            avatarSprite.position.set(0, 2.55, 0.2);
-            avatarSprite.userData = { baseY: 2.55 };
+            avatarSprite.scale.set(0.52, 0.52, 0.52);
+            avatarSprite.position.set(0, 2.80, 0.15);
+            avatarSprite.userData = { baseY: 2.80 };
             carGroup.add(avatarSprite);
 
             // pin line connecting to roof
-            const pinGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.6, 6);
+            const pinGeo = new THREE.CylinderGeometry(0.012, 0.012, 1.0, 6);
             const pinMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
             avatarPin = new THREE.Mesh(pinGeo, pinMat);
-            avatarPin.position.set(0, 1.72, 0.2);
+            avatarPin.position.set(0, 1.95, 0.15);
             carGroup.add(avatarPin);
         }
 
-        // ---------------- BUILDINGS / TREES / LAMPS ----------------
+        // ---------------- BUILDINGS / TREES / LAMPS / BILLBOARDS / SHOPS ----------------
         function makeWindowTexture(seed) {
             const cvs = document.createElement('canvas');
             cvs.width = 64; cvs.height = 128;
             const ctx = cvs.getContext('2d');
-            const hues = [0x2b3a55, 0x3a2b55, 0x264a4a, 0x4a3a26, 0x394a2b];
+            const hues = [0x2b3a55, 0x3a2b55, 0x264a4a, 0x4a3a26, 0x394a2b, 0x1f2e3d, 0x3d2838];
             const base = hues[seed % hues.length];
             ctx.fillStyle = '#' + base.toString(16).padStart(6, '0');
             ctx.fillRect(0, 0, 64, 128);
-            ctx.fillStyle = 'rgba(255,230,140,0.85)';
+            ctx.fillStyle = 'rgba(255,230,140,0.88)';
             for (let y = 6; y < 128; y += 12) {
                 for (let x = 6; x < 64; x += 10) {
                     if (Math.random() > 0.45) ctx.fillRect(x, y, 5, 7);
@@ -1466,7 +1518,7 @@
             const w = 5 + Math.random() * 5;
             const h = 6 + Math.random() * 22;
             const d = 5 + Math.random() * 5;
-            const tex = makeWindowTexture(Math.floor(Math.random() * 5));
+            const tex = makeWindowTexture(Math.floor(Math.random() * 7));
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
             tex.repeat.set(1, Math.max(1, Math.round(h / 6)));
             const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 });
@@ -1476,6 +1528,165 @@
             mesh.castShadow = true; mesh.receiveShadow = true;
             scene.add(mesh);
             return mesh;
+        }
+
+        function makeDistantBuilding(x, z, seed) {
+            const g = new THREE.Group();
+            const w = 12 + Math.random() * 10;
+            const h = 28 + Math.random() * 38;
+            const d = 12 + Math.random() * 10;
+            const tex = makeWindowTexture(seed);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(2, Math.max(2, Math.round(h / 8)));
+            const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, metalness: 0.2 });
+            const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            body.position.y = h / 2;
+            g.add(body);
+
+            // spire or crown on some tall towers
+            if (h > 45) {
+                const spire = new THREE.Mesh(new THREE.ConeGeometry(w * 0.22, 9, 4), new THREE.MeshStandardMaterial({ color: 0x334455, metalness: 0.8 }));
+                spire.position.y = h + 4.5;
+                g.add(spire);
+                const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.5, 6, 6), new THREE.MeshStandardMaterial({ color: 0xff3333, emissive: 0xff1111, emissiveIntensity: 1 }));
+                beacon.position.y = h + 9;
+                g.add(beacon);
+            }
+            g.position.set(x, 0, z);
+            scene.add(g);
+            return g;
+        }
+
+        function makeBillboardTexture(seed) {
+            const cvs = document.createElement('canvas');
+            cvs.width = 256; cvs.height = 128;
+            const ctx = cvs.getContext('2d');
+            const banners = [
+                { bg1: '#111e38', bg2: '#0b1324', title: "VASU'S RUSH", sub: 'HIGH SPEED ACTION', col: '#ffd23f' },
+                { bg1: '#3d1223', bg2: '#1a080f', title: 'NITRO BOOST', sub: 'MAXIMUM POWER', col: '#ff6b6b' },
+                { bg1: '#0f3328', bg2: '#061712', title: 'VASU MOTORS', sub: 'QUALITY & PERFORMANCE', col: '#4fd1c5' },
+                { bg1: '#2e1c07', bg2: '#140c03', title: 'CAFE 24/7', sub: 'PIT STOP & COFFEE', col: '#ffaa33' },
+                { bg1: '#260f38', bg2: '#100617', title: 'CYBER CITY', sub: 'THE FUTURE OF RACING', col: '#d980fa' },
+            ];
+            const b = banners[seed % banners.length];
+            const g = ctx.createLinearGradient(0, 0, 256, 128);
+            g.addColorStop(0, b.bg1); g.addColorStop(1, b.bg2);
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 256, 128);
+
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = b.col;
+            ctx.strokeRect(3, 3, 250, 122);
+
+            ctx.fillStyle = b.col;
+            ctx.font = 'bold 24px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(b.title, 128, 48);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Arial, sans-serif';
+            ctx.fillText(b.sub, 128, 84);
+
+            return new THREE.CanvasTexture(cvs);
+        }
+
+        function makeBillboard(x, z, seed) {
+            const g = new THREE.Group();
+            const poleMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.7, roughness: 0.4 });
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.6 });
+
+            for (const px of [-1.8, 1.8]) {
+                const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 6.2, 8), poleMat);
+                pole.position.set(px, 3.1, 0);
+                pole.castShadow = true;
+                g.add(pole);
+            }
+
+            const board = new THREE.Mesh(new THREE.BoxGeometry(5.2, 2.6, 0.25), frameMat);
+            board.position.set(0, 6.2, 0);
+            board.castShadow = true;
+            g.add(board);
+
+            const tex = makeBillboardTexture(seed);
+            const adMat = new THREE.MeshStandardMaterial({ map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.35 });
+            const adPlane = new THREE.Mesh(new THREE.PlaneGeometry(4.9, 2.3), adMat);
+            adPlane.position.set(0, 6.2, x < 0 ? 0.14 : -0.14);
+            if (x > 0) adPlane.rotation.y = Math.PI;
+            g.add(adPlane);
+
+            g.position.set(x, 0, z);
+            scene.add(g);
+            return g;
+        }
+
+        function makeBusStop(x, z) {
+            const g = new THREE.Group();
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x252b36, metalness: 0.6, roughness: 0.5 });
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x4fd1c5, transparent: true, opacity: 0.55 });
+            const benchMat = new THREE.MeshStandardMaterial({ color: 0x96613d, roughness: 0.9 });
+
+            const roof = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.12, 1.8), frameMat);
+            roof.position.set(0, 2.5, 0);
+            roof.castShadow = true;
+            g.add(roof);
+
+            const backGlass = new THREE.Mesh(new THREE.BoxGeometry(3.4, 2.3, 0.06), glassMat);
+            backGlass.position.set(0, 1.25, x < 0 ? -0.8 : 0.8);
+            g.add(backGlass);
+
+            for (const px of [-1.6, 1.6]) {
+                const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.5, 8), frameMat);
+                post.position.set(px, 1.25, 0.75);
+                g.add(post);
+            }
+
+            const bench = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.1, 0.45), benchMat);
+            bench.position.set(0, 0.48, x < 0 ? -0.4 : 0.4);
+            g.add(bench);
+
+            const signMat = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffaa00, emissiveIntensity: 0.6 });
+            const sign = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.2), signMat);
+            sign.position.set(x < 0 ? 1.7 : -1.7, 2.0, 0.7);
+            g.add(sign);
+
+            g.position.set(x, 0, z);
+            scene.add(g);
+            return g;
+        }
+
+        function makeShopFront(x, z, seed) {
+            const g = new THREE.Group();
+            const w = 7.5, h = 9.5, d = 6.5;
+            const tex = makeWindowTexture(seed);
+            const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 });
+            const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            body.position.y = h / 2;
+            body.castShadow = true;
+            g.add(body);
+
+            const awningColors = [0xd1352b, 0x2b6dd1, 0x2fa84f, 0xffaa33];
+            const c = awningColors[seed % awningColors.length];
+            const awningMat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.7 });
+            const awning = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.2, 1.4), awningMat);
+            awning.position.set(0, 2.6, x < 0 ? (d / 2 + 0.6) : -(d / 2 + 0.6));
+            awning.rotation.x = x < 0 ? 0.2 : -0.2;
+            g.add(awning);
+
+            const storeLitMat = new THREE.MeshStandardMaterial({ color: 0xffe6aa, emissive: 0xffd277, emissiveIntensity: 0.7 });
+            const storeFront = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 2.0), storeLitMat);
+            storeFront.position.set(0, 1.1, x < 0 ? (d / 2 + 0.05) : -(d / 2 + 0.05));
+            if (x > 0) storeFront.rotation.y = Math.PI;
+            g.add(storeFront);
+
+            const signMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffd23f, emissiveIntensity: 0.6 });
+            const sign = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.55, 0.15), signMat);
+            sign.position.set(0, 3.1, x < 0 ? (d / 2 + 0.1) : -(d / 2 + 0.1));
+            g.add(sign);
+
+            g.position.set(x, 0, z);
+            scene.add(g);
+            return g;
         }
 
         function makeTree(x, z) {
@@ -1527,6 +1738,42 @@
                 if (Math.random() > 0.15) { const b = makeBuilding(0, z + (Math.random() - 0.5) * 6, -1); b.userData.baseX = -(roadHalf + 8 + Math.random() * 4); leftBuildings.push(b); }
                 if (Math.random() > 0.15) { const b = makeBuilding(0, z + (Math.random() - 0.5) * 6, 1); b.userData.baseX = roadHalf + 8 + Math.random() * 4; rightBuildings.push(b); }
             }
+            // Distant skyline buildings (parallax depth)
+            for (let z = 0; z > -CONFIG.roadLength * 1.4; z -= 28) {
+                const dbL = makeDistantBuilding(0, z + (Math.random() - 0.5) * 10, Math.floor(Math.random() * 5));
+                dbL.userData.baseX = -(roadHalf + 35 + Math.random() * 15);
+                distantBuildingsL.push(dbL);
+                const dbR = makeDistantBuilding(0, z + (Math.random() - 0.5) * 10, Math.floor(Math.random() * 5));
+                dbR.userData.baseX = roadHalf + 35 + Math.random() * 15;
+                distantBuildingsR.push(dbR);
+            }
+            // Roadside billboards
+            for (let z = -35; z > -CONFIG.roadLength; z -= 75) {
+                const bbL = makeBillboard(0, z + (Math.random() - 0.5) * 12, Math.floor(Math.random() * 5));
+                bbL.userData.baseX = -(roadHalf + 4.2);
+                billboardsL.push(bbL);
+                const bbR = makeBillboard(0, z + 35 + (Math.random() - 0.5) * 12, Math.floor(Math.random() * 5));
+                bbR.userData.baseX = roadHalf + 4.2;
+                billboardsR.push(bbR);
+            }
+            // Roadside bus stops
+            for (let z = -50; z > -CONFIG.roadLength; z -= 85) {
+                const bsL = makeBusStop(0, z);
+                bsL.userData.baseX = -(roadHalf + 2.4);
+                busStopsL.push(bsL);
+                const bsR = makeBusStop(0, z + 42);
+                bsR.userData.baseX = roadHalf + 2.4;
+                busStopsR.push(bsR);
+            }
+            // Roadside shop fronts
+            for (let z = -20; z > -CONFIG.roadLength; z -= 65) {
+                const sfL = makeShopFront(0, z + (Math.random() - 0.5) * 8, Math.floor(Math.random() * 4));
+                sfL.userData.baseX = -(roadHalf + 9 + Math.random() * 2);
+                shopFrontsL.push(sfL);
+                const sfR = makeShopFront(0, z + 30 + (Math.random() - 0.5) * 8, Math.floor(Math.random() * 4));
+                sfR.userData.baseX = roadHalf + 9 + Math.random() * 2;
+                shopFrontsR.push(sfR);
+            }
             for (let z = 0; z > -CONFIG.roadLength; z -= CONFIG.treeSpawnStep) {
                 const tl = makeTree(0, z + (Math.random() - 0.5) * 3); tl.userData.baseX = -(roadHalf + 2.3); treesL.push(tl);
                 const tr = makeTree(0, z + (Math.random() - 0.5) * 3); tr.userData.baseX = roadHalf + 2.3; treesR.push(tr);
@@ -1541,9 +1788,10 @@
             const moveZ = state.speed * delta;
             const roadHalf = (CONFIG.laneWidth * CONFIG.laneCount) / 2 + 1.2;
 
-            function recycleArr(arr, spacing, xFor) {
+            function recycleArr(arr, spacing, xFor, speedFactor) {
+                const actualMove = speedFactor !== undefined ? moveZ * speedFactor : moveZ;
                 for (const obj of arr) {
-                    obj.position.z += moveZ;
+                    obj.position.z += actualMove;
                     if (obj.position.z > CONFIG.recycleDistance) {
                         obj.position.z -= (arr.length) * spacing;
                         obj.userData.baseX = xFor();
@@ -1553,6 +1801,14 @@
             }
             recycleArr(leftBuildings, CONFIG.buildingSpawnStep, () => -(roadHalf + 8 + Math.random() * 4));
             recycleArr(rightBuildings, CONFIG.buildingSpawnStep, () => (roadHalf + 8 + Math.random() * 4));
+            recycleArr(distantBuildingsL, 28, () => -(roadHalf + 35 + Math.random() * 15), 0.42);
+            recycleArr(distantBuildingsR, 28, () => (roadHalf + 35 + Math.random() * 15), 0.42);
+            recycleArr(billboardsL, 75, () => -(roadHalf + 4.2));
+            recycleArr(billboardsR, 75, () => (roadHalf + 4.2));
+            recycleArr(busStopsL, 85, () => -(roadHalf + 2.4));
+            recycleArr(busStopsR, 85, () => (roadHalf + 2.4));
+            recycleArr(shopFrontsL, 65, () => -(roadHalf + 9 + Math.random() * 2));
+            recycleArr(shopFrontsR, 65, () => (roadHalf + 9 + Math.random() * 2));
             recycleArr(treesL, CONFIG.treeSpawnStep, () => -(roadHalf + 2.3));
             recycleArr(treesR, CONFIG.treeSpawnStep, () => (roadHalf + 2.3));
             recycleArr(lampsL, CONFIG.lampSpawnStep, () => -(roadHalf + 1.1));
@@ -1674,7 +1930,7 @@
                 if (i < activeCount) {
                     activateVehicle(v, z, lastLane);
                     lastLane = v.userData.lane;
-                    z -= (CONFIG.trafficSpawnStep + Math.random() * 30);
+                    z -= (CONFIG.trafficSpawnStep + Math.random() * 45);
                 } else {
                     v.visible = false;
                     v.userData.active = false;
@@ -1701,7 +1957,7 @@
                         minZ = other.position.z;
                     }
                 }
-                v.position.z = minZ - (CONFIG.trafficSpawnStep + Math.random() * 35);
+                v.position.z = minZ - (CONFIG.trafficSpawnStep + Math.random() * 50);
             }
 
             v.position.x = v.userData.baseX + curveX(v.position.z);
@@ -2392,6 +2648,12 @@
 
                 document.getElementById('distance-val').textContent = Math.floor(state.distance);
                 document.getElementById('speed-val').textContent = Math.floor(state.speed * 3.6);
+            }
+
+            // cloud drift
+            for (const c of clouds) {
+                c.position.x += c.userData.driftSpeed * delta;
+                if (c.position.x > c.userData.maxX) c.position.x = c.userData.minX;
             }
 
             updateParticles(delta);
