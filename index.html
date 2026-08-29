@@ -2204,9 +2204,6 @@
                 ['touchstart', 'mousedown'].forEach(ev => leftBtn.addEventListener(ev, e => {
                     e.preventDefault();
                     touchActive.left = true;
-                    if (state.running && !state.paused && !state.crashed) {
-                        state.lane = Math.max(0, state.lane - 1);
-                    }
                 }, { passive: false }));
                 ['touchend', 'mouseup', 'touchcancel', 'mouseleave'].forEach(ev => leftBtn.addEventListener(ev, e => {
                     e.preventDefault();
@@ -2218,9 +2215,6 @@
                 ['touchstart', 'mousedown'].forEach(ev => rightBtn.addEventListener(ev, e => {
                     e.preventDefault();
                     touchActive.right = true;
-                    if (state.running && !state.paused && !state.crashed) {
-                        state.lane = Math.min(CONFIG.laneCount - 1, state.lane + 1);
-                    }
                 }, { passive: false }));
                 ['touchend', 'mouseup', 'touchcancel', 'mouseleave'].forEach(ev => rightBtn.addEventListener(ev, e => {
                     e.preventDefault();
@@ -2244,9 +2238,11 @@
                     const dy = e.changedTouches[0].clientY - touchStartY;
                     if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
                         if (dx < 0) {
-                            state.lane = Math.max(0, state.lane - 1);
+                            touchActive.left = true;
+                            setTimeout(() => { touchActive.left = false; }, 50);
                         } else {
-                            state.lane = Math.min(CONFIG.laneCount - 1, state.lane + 1);
+                            touchActive.right = true;
+                            setTimeout(() => { touchActive.right = false; }, 50);
                         }
                     }
                 }
@@ -2511,6 +2507,7 @@
             state.crashed = false;
             state.won = false;
             state.paused = false;
+            laneKeyLatch = { left: false, right: false };
             state.lane = 1;
             state.currentX = lanesX[1];
             state.targetX = lanesX[1];
